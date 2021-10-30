@@ -3,13 +3,13 @@
 import random
 import collections
 
-def crossover(p1, p2):
+def crossover(p1, p2, with_placement = False):
     c1 = [0] * len(p1)
     
     numbers = random.sample(range(1, len(p1) - 1), 2)
     numbers.sort()
     [a, b] = numbers
-    # [a, b] = [2, 4]
+    [a, b] = [2, 4]
 
     for e in range(a, b + 1):
         c1[e] = p1[e]
@@ -19,16 +19,22 @@ def crossover(p1, p2):
     p2_r = collections.deque(p2)
     p2_r.rotate(len(p2) - b - 1)
     p2_r = list(p2_r)
+
     print("cutoff", f"{a}:{b}", p1[a:b+1], b - a)
     print("remaining", remaining)
+
     
-    i = b + 1
+    i = b + 1 if with_placement else 0
     for el in p2_r:
         if el in remaining:
             c1[i] = el
-            end_of_array = i == len(p2) - 1
-            i = 0 if end_of_array else i + 1
-            
+            if with_placement:
+                end_of_array = i == len(p2) - 1
+                i = 0 if end_of_array else i + 1
+            else:
+                cutoff = i == (a - 1)
+                i = b + 1 if cutoff else i + 1
+
     return c1
 
 p1 = [7, 3, 1, 8, 2, 4, 6, 5]
